@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 标签栏容器 - 固定在顶部 -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <div class="tab active" data-market="ALL">全部</div>
+        <div class="tab" data-market="CN">A股</div>
+        <div class="tab" data-market="HK">港股</div>
+        <div class="tab" data-market="US">美股</div>
+      </div>
+    </div>
+
+    <!-- 可滚动的内容区域 -->
+    <div class="scrollable-content">
+      <!-- 指数展示区 -->
+      <div class="indices">
+        <div class="indices-wrapper">
+          <div class="indices-slider">
+            <div class="indices-group active" data-market="CN">
+              <div class="index">
+                <div class="index-name">上证指数</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">深证成指</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">创业板指</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+            </div>
+            <div class="indices-group" data-market="HK">
+              <div class="index">
+                <div class="index-name">恒生指数</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">国企指数</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">恒生科技</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+            </div>
+            <div class="indices-group" data-market="US">
+              <div class="index">
+                <div class="index-name">道琼斯</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">纳斯达克</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+              <div class="index">
+                <div class="index-name">标普500</div>
+                <div class="index-value">-</div>
+                <div class="index-change">-</div>
+              </div>
+            </div>
+          </div>
+          <div class="indices-dots">
+            <span class="dot active" data-market="CN"></span>
+            <span class="dot" data-market="HK"></span>
+            <span class="dot" data-market="US"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 搜索区域 -->
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="请输入股票代码或名称">
+        <div class="market-selector">
+          <span class="current-market">A股</span>
+          <img src="img/arrow-down.svg" alt="arrow" class="arrow">
+        </div>
+        <div class="market-dropdown">
+          <div class="market-option" data-market="CN">A股</div>
+          <div class="market-option" data-market="HK">港股</div>
+          <div class="market-option" data-market="US">美股</div>
+        </div>
+        <div class="search-results"></div>
+      </div>
+
+      <!-- 自选股列表 -->
+      <div class="watchlist">
+        <div class="watchlist-content"></div>
+      </div>
+    </div>
+
+    <!-- 底部固定栏 -->
+    <div class="bottom-bar">
+      <div class="settings-group">
+        <button class="settings-btn">
+          <img src="img/settings.svg" alt="settings">
+        </button>
+        <span class="last-update">最近更新：12:00:00</span>
+      </div>
+    </div>
+
+    <!-- 设置对话框 -->
+    <div class="settings-dialog">
+      <div class="settings-content">
+        <h3>设置</h3>
+        <div class="settings-items">
+          <div class="setting-item">
+            <label>自动刷新间隔</label>
+            <select class="refresh-interval">
+              <option value="5">5秒</option>
+              <option value="10" selected>10秒</option>
+              <option value="30">30秒</option>
+              <option value="60">1分钟</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>涨跌颜色</label>
+            <select class="color-scheme">
+              <option value="red-up" selected>红涨绿跌</option>
+              <option value="green-up">绿涨红跌</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>显示语言</label>
+            <select class="language">
+              <option value="zh" selected>简体中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button class="cancel-btn">取消</button>
+          <button class="confirm-btn">确定</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 价格提醒对话框 -->
+    <div class="alert-dialog">
+      <div class="alert-content">
+        <h3>价格提醒</h3>
+        <div class="alert-inputs">
+          <div class="input-group">
+            <label>提醒价格</label>
+            <input type="number" class="price-input" step="0.01" placeholder="请输入目标价格">
+          </div>
+        </div>
+        <div class="alert-actions">
+          <button class="cancel-btn">取消</button>
+          <button class="confirm-btn">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
