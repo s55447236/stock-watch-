@@ -775,7 +775,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     alertPriceList.insertAdjacentHTML('beforeend', alertHtml);
 
-    // ��加删除按钮的事件监听
+    // 添加删除按钮的事件监听
     const newAlertItem = alertPriceList.querySelector(`.alert-price-item[data-price="${price}"]`);
     if (newAlertItem) {
       const removeBtn = newAlertItem.querySelector('.remove-alert');
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       handleSearch(e.target.value);
     });
 
-    // 添加点击事件监听器，防止点击搜索框时关闭下拉列表
+    // 添加点击事件监听器，防止点击搜索框时关闭拉列表
     searchInput.addEventListener('click', (e) => {
       e.stopPropagation();
       if (searchInput.value.trim()) {
@@ -1060,14 +1060,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 保存设置
   function saveSettings() {
-    const settings = {
+    const oldLanguage = language;
+    const refreshInterval = document.querySelector('.refresh-interval').value;
+    const colorScheme = document.querySelector('.color-scheme').value;
+    const newLanguage = document.querySelector('.language').value;
+    
+    storage.sync.set({
       refreshInterval,
       colorScheme,
-      language
-    };
-    
-    storage.sync.set({ settings }, function() {
+      language: newLanguage
+    }, async () => {
+      if (oldLanguage !== newLanguage) {
+        language = newLanguage;
+        updateLanguage();
+        await updateAllData();
+      }
       showToast(translations[language].settingsSaved);
+      document.querySelector('.settings-dialog').style.display = 'none';
     });
   }
 
@@ -1135,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     colorOptions[0].textContent = t.redUpGreenDown;
     colorOptions[1].textContent = t.greenUpRedDown;
 
-    // 更���按钮文本
+    // 更新按钮文本
     document.querySelectorAll('.cancel-btn').forEach(btn => btn.textContent = t.cancel);
     document.querySelectorAll('.confirm-btn').forEach(btn => btn.textContent = t.confirm);
     document.querySelectorAll('.add-btn').forEach(btn => btn.textContent = t.addToWatchlist);
@@ -1215,5 +1224,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         option.classList.toggle('active', t[marketKey] === defaultMarket);
       }
     });
+  }
+
+  // 在 DOMContentLoaded 事件监听器中添加刷新按钮的事件处理
+  const refreshBtn = document.querySelector('.refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+      refreshBtn.classList.add('rotating');
+      await updateAllData();
+      setTimeout(() => {
+        refreshBtn.classList.remove('rotating');
+      }, 1000);
+    });
+  }
+
+  // 更新所有数据的函数
+  async function updateAllData() {
+    await updateIndices();
+    const watchlistItems = document.querySelectorAll('.stock-item');
+    for (const item of watchlistItems) {
+      const code = item.dataset.code;
+      const market = item.dataset.market;
+      if (code && market) {
+        await updateStockPrice(code, market);
+      }
+    }
+    updateLastUpdateTime();
+  }
+
+  // 更新最后更新时间
+  function updateLastUpdateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+    const lastUpdateSpan = document.querySelector('.last-update');
+    if (lastUpdateSpan) {
+      const t = translations[language];
+      lastUpdateSpan.textContent = `${t.lastUpdate}：${timeString}`;
+    }
   }
 }); 
